@@ -1,7 +1,6 @@
 ![Banner](docs/images/cortexA_banner_image.png)
 
-
-# CortexA ⚪
+<h1 style="text-align:center;">CortexA ⚪</h1>
 **Predicting future neurodegeneration states from 3D MRI using generative diffusion — built for clinical-grade speed.**
 
 > **Status: Work in Progress (WIP).**  
