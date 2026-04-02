@@ -73,16 +73,6 @@ CortexA is built to keep **resolution high** while making inference **fast enoug
 
 ---
 
-## Current Performance & Known Limitations (WIP)
-- **Inference > 40 minutes** on consumer GPUs
-- Requires **heavy downsampling** to fit VRAM limits
-- **VRAM bottlenecks** block high-resolution clinical-grade processing
-- Goal: leverage **B200 Tensor Cores** + optimized kernels to enable:
-  - seconds-level inference
-  - real-time-ish UI rendering (progressive outputs, streaming updates)
-
----
-
 ## Roadmap (Suggested)
 ### Modeling
 - [ ] Validate diffusion objective against longitudinal MRI outcomes
