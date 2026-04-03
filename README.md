@@ -74,26 +74,26 @@ CortexA is built to keep **resolution high** while making inference **fast enoug
 ---
 
 ## Roadmap (Suggested)
-### Modeling
-- [ ] Validate diffusion objective against longitudinal MRI outcomes
-- [ ] Calibrate uncertainty (credible intervals / ensemble or diffusion variance)
-- [ ] Add change-map outputs (voxelwise deltas) for interpretability
 
-### Inference & Acceleration
-- [ ] TensorRT compilation path for denoiser + attention blocks
-- [ ] Mixed precision (FP16/BF16) + kernel fusion
-- [ ] Latent-space optimizations (smaller latent grids, smarter upsampling)
-- [ ] Patch-wise inference with overlap/tiling to control VRAM
-- [ ] Streaming inference to UI (progressive refinement)
+### **Modeling**
+*   **Validate diffusion objective against longitudinal MRI outcomes:** Evaluate the model's ability to track disease-specific trajectories, such as **hippocampal shrinkage** or **ventricular enlargement**. Use metrics like **SSIM** (image similarity) and **MAE** (volumetric accuracy) to compare predicted follow-up scans against actual longitudinal data.
+*   **Calibrate uncertainty via Latent Average Stabilization (LAS):** Improve spatiotemporal consistency by repeating the inference process multiple times and **averaging the results** to estimate a theoretical mean progression, reducing irregularities caused by random noise.
+*   **Add change-map outputs for interpretability:** Integrate **Class Activation Maps (CAM)** or voxelwise deviation maps to visualize areas of significant longitudinal change, such as **cortical thinning** or lesion growth, providing clinicians with localized evidence for the model's predictions.
 
-### Product / UI
-- [ ] “Instant preview” mode (quick low-step diffusion, refine on idle)
-- [ ] Volume renderer integration (slice view + 3D view)
-- [ ] Patient/session management + audit logs (if needed)
+### **Inference & Acceleration**
+*   **TensorRT compilation for hybrid architectures:** Focus optimization on **Transformer blocks** (self-attention/cross-attention) while maintaining a hybrid CNN-Transformer structure to ensure high-resolution spatial details are not lost during upsampling.
+*   **Latent-space optimizations:** Utilize **AutoencoderKL** to compress 3D volumes (e.g., up to **170x compression**) before diffusion, significantly increasing inference throughput. 
+*   **Patch-wise inference with overlap:** Implement a **sliding-window manner** for inference to manage the high VRAM demands of 3D medical scans, aggregating patch probabilities to obtain a final hard prediction.
+*   **Streaming inference via next-scale prediction:** Transition from sequential next-token prediction to **parallel next-scale prediction**. This allows for **coarse-to-fine synthesis**, providing a usable "global" anatomy preview almost instantly while refining localized details in the background.
 
-### Engineering
-- [ ] Deterministic runs + reproducible pipelines
-- [ ] Robust IO: NIfTI/DICOM handling (as applicable)
-- [ ] Benchmarks: time/VRAM per volume and per resolution
+### **Product / UI**
+*   **“Instant preview” mode:** Use the **hierarchical nature of next-scale prediction** to display initial low-resolution structural volumes immediately, aligning with how radiologists read scans (global anatomy before local details).
+*   **Standardized Volume Renderer:** Ensure integration of the three primary planes—**Sagittal, Axial, and Coronal**—using the **neuraxis** as an orientation reference to help users navigate structures like the basal ganglia or hippocampus.
+*   **Compliance and Security:** Implement **HIPAA-compliant encryption** for data transmissions and a **patient management system** that separates personally identifiable information in metadata files from clinical image data.
+
+### **Engineering**
+*   **BIDS Standardization:** Adopt the **Brain Imaging Data Structure (BIDS)** as the core organizational standard to ensure your pipeline is interoperable and reusable across different research and clinical sites.
+*   **Robust IO (DICOM to NIfTI):** Build a pipeline that handles the idiosyncratic nature of **source DICOM data** (e.g., Siemens vs. Philips) and converts it into the **NIfTI format**, which is more efficient for day-to-day deep learning analysis.
+*   **AID-RT Documentation & Benchmarking:** Generate a domain-specific **model card** (following AID-RT standards) that explicitly lists hardware/software requirements, **expected inference times**, and the **environmental impact** (carbon emissions) of your model.
 
 ---
